@@ -4,10 +4,9 @@ import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStoragePublicDirectory
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import rohit5k2.appslist.databinding.ActivityMainBinding
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -15,18 +14,20 @@ import java.io.FileWriter
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private val fileName:String = "rohit5k2.appslist.txt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
 
     private fun init(){
         showSnackBar("Please grant permissions manually in settings if device Android version is 6 or above.")
-        get_all_apps_info.setOnClickListener {
+        binding.getAllAppsInfo.setOnClickListener {
             getAppsList()
         }
     }
@@ -44,11 +45,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun writeToFile(sb:StringBuilder){
         try {
-            var file = File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), fileName)
+            val file = File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), fileName)
             if (!file!!.exists())
                 file?.createNewFile()
 
-            var buffer = BufferedWriter(FileWriter(file, false))
+            val buffer = BufferedWriter(FileWriter(file, false))
 
             buffer.write("***** Rohit Kumar - Device Apps list ***** \n\n\n\n")
             buffer.write(sb.toString())
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSnackBar(message:String){
-        var sb: Snackbar = Snackbar.make(findViewById<View>(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE)
+        val sb: Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_INDEFINITE)
         sb.setAction("Ok"){ }
         sb.show()
     }
